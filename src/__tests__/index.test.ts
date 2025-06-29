@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "bun:test";
-import { NeuroApi } from "./index";
+import { NeuroApi } from "../index";
 
 describe("NeuroApi", () => {
   let client: NeuroApi;
@@ -16,6 +16,7 @@ describe("NeuroApi", () => {
       expect(client).toBeDefined();
       expect(client.chat).toBeDefined();
       expect(client.completions).toBeDefined();
+      expect(client.images).toBeDefined();
     });
 
     it("should normalize baseURL by removing trailing slash", () => {
@@ -137,6 +138,51 @@ describe("NeuroApi", () => {
         client.completions.withResponse({
           model: "gpt-3.5-turbo",
           prompt: "test",
+        })
+      ).rejects.toThrow(); // Network error expected in test, but method should exist
+    });
+  });
+
+  describe("images", () => {
+    it("should validate required parameters", async () => {
+      await expect(
+        client.images.generate({
+          prompt: "",
+        })
+      ).rejects.toThrow("prompt is required");
+    });
+
+    it("should validate n parameter range", async () => {
+      await expect(
+        client.images.generate({
+          prompt: "test",
+          n: 0,
+        })
+      ).rejects.toThrow("n must be between 1 and 10");
+
+      await expect(
+        client.images.generate({
+          prompt: "test",
+          n: 11,
+        })
+      ).rejects.toThrow("n must be between 1 and 10");
+    });
+
+    it("should validate dall-e-3 n parameter", async () => {
+      await expect(
+        client.images.generate({
+          prompt: "test",
+          model: "dall-e-3",
+          n: 2,
+        })
+      ).rejects.toThrow("dall-e-3 only supports n=1");
+    });
+
+    it("should support withResponse method", async () => {
+      await expect(
+        client.images.withResponse({
+          prompt: "test image",
+          model: "dall-e-2",
         })
       ).rejects.toThrow(); // Network error expected in test, but method should exist
     });

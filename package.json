@@ -1,6 +1,6 @@
 {
   "name": "neuroapi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OpenAI compatible API client for neuroapi.host",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

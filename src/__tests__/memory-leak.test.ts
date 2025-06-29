@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
-import { ChatCompletionStreamingRunner } from "./resources/chat/streaming";
-import { CompletionStreamingRunner } from "./resources/completions/streaming";
+import { ChatCompletionStreamingRunner } from "../resources/chat/streaming";
+import { CompletionStreamingRunner } from "../resources/completions/streaming";
 
 function forceGarbageCollect() {
   if (global.gc) {

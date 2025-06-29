@@ -1,4 +1,5 @@
 import { FinishReason, Usage } from "./common";
+import { SupportedModel } from "./models";
 
 export interface CompletionChoice {
   text: string;
@@ -10,13 +11,13 @@ export interface Completion {
   id: string;
   object: "text_completion";
   created: number;
-  model: string;
+  model: SupportedModel;
   choices: CompletionChoice[];
   usage?: Usage;
 }
 
 export interface CompletionCreateParams {
-  model: string;
+  model: SupportedModel;
   prompt: string | string[];
   max_tokens?: number;
   temperature?: number;
@@ -32,7 +33,7 @@ export interface CompletionChunk {
   id: string;
   object: "text_completion";
   created: number;
-  model: string;
+  model: SupportedModel;
   choices: CompletionChunkChoice[];
   usage?: Usage;
 }

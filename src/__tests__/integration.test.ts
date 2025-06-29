@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from "bun:test";
-import { NeuroApi } from "./index";
+import { NeuroApi } from "../index";
 
 // Integration тесты требуют настоящий API endpoint и ключ
 // Эти тесты запускаются только если установлены переменные окружения

@@ -5,6 +5,7 @@ TypeScript/JavaScript клиент для OpenAI-совместимых API, р�
 ## Особенности
 
 - ✅ **OpenAI-совместимый** - полная совместимость с Chat Completions API
+- ✅ **Images API** - генерация, редактирование и вариации изображений
 - ✅ **Streaming поддержка** - реальное время с Server-Sent Events
 - ✅ **TypeScript-first** - полная типизация
 - ✅ **Zero dependencies** - использует встроенный fetch API
@@ -175,6 +176,106 @@ await stream.done();
 const finalContent = await stream.finalContent();
 ```
 
+## Images API
+
+### Генерация изображений
+
+```typescript
+// Генерация изображения DALL-E 3
+const imageResponse = await client.images.generate({
+  prompt: "A futuristic city with flying cars at sunset",
+  model: "dall-e-3",
+  size: "1024x1024",
+  quality: "hd",
+  style: "vivid",
+  n: 1,
+});
+
+console.log("URL изображения:", imageResponse.data[0].url);
+console.log("Доработанный промпт:", imageResponse.data[0].revised_prompt);
+
+// Генерация нескольких изображений DALL-E 2
+const multipleImages = await client.images.generate({
+  prompt: "A cute cat playing with a ball",
+  model: "dall-e-2",
+  size: "512x512",
+  n: 4,
+});
+
+multipleImages.data.forEach((image, index) => {
+  console.log(`Изображение ${index + 1}:`, image.url);
+});
+```
+
+### Получение base64 изображений
+
+```typescript
+const base64Response = await client.images.generate({
+  prompt: "A simple geometric pattern",
+  model: "dall-e-2",
+  size: "256x256",
+  response_format: "b64_json",
+  n: 1,
+});
+
+const base64Image = base64Response.data[0].b64_json;
+// Сохранение или использование base64 изображения
+```
+
+### Редактирование изображений
+
+```typescript
+import { readFileSync } from "fs";
+
+// Подготовка файлов
+const imageFile = readFileSync("original.png");
+const maskFile = readFileSync("mask.png"); // Белые области - редактируемые
+
+const editedImage = await client.images.edit({
+  image: new Blob([imageFile]),
+  mask: new Blob([maskFile]),
+  prompt: "Add a rainbow in the sky",
+  model: "dall-e-2",
+  size: "1024x1024",
+  n: 1,
+});
+
+console.log("Отредактированное изображение:", editedImage.data[0].url);
+```
+
+### Создание вариаций
+
+```typescript
+import { readFileSync } from "fs";
+
+const imageFile = readFileSync("source.png");
+
+const variations = await client.images.createVariation({
+  image: new Blob([imageFile]),
+  model: "dall-e-2",
+  size: "1024x1024",
+  n: 3,
+});
+
+variations.data.forEach((variation, index) => {
+  console.log(`Вариация ${index + 1}:`, variation.url);
+});
+```
+
+### Использование с метаданными
+
+```typescript
+const response = await client.images.withResponse({
+  prompt: "A beautiful landscape",
+  model: "dall-e-3",
+  size: "1024x1024",
+});
+
+console.log("Request ID:", response.requestId);
+console.log("HTTP Status:", response.response.status);
+console.log("Изображение:", response.data.data[0].url);
+```
+
 ## API Reference
 
 ### Client Options
@@ -232,6 +333,35 @@ await client.completions.create({
 await client.completions.withResponse({...});
 ```
 
+### Images API
+
+```typescript
+// Генерация изображений
+await client.images.generate({
+  prompt: "A beautiful landscape",
+  model: "dall-e-3",
+  size: "1024x1024",
+  quality: "hd",
+  style: "vivid"
+});
+
+// С метаданными
+await client.images.withResponse({...});
+
+// Редактирование изображений
+await client.images.edit({
+  image: imageBlob,
+  mask: maskBlob,
+  prompt: "Add a rainbow"
+});
+
+// Создание вариаций
+await client.images.createVariation({
+  image: imageBlob,
+  n: 3
+});
+```
+
 ## Обработка ошибок
 
 ```typescript
@@ -275,6 +405,7 @@ try {
 - [`basic-usage.ts`](./examples/basic-usage.ts) - Базовое использование с streaming
 - [`function-calling-example.ts`](./examples/function-calling-example.ts) - Function calling с инструментами
 - [`tool-calling-example.ts`](./examples/tool-calling-example.ts) - Tool calling примеры
+- [`images-example.ts`](./examples/images-example.ts) - Генерация и редактирование изображений
 - [`error-handling-example.ts`](./examples/error-handling-example.ts) - Обработка ошибок и retry
 
 Запуск примеров:

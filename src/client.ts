@@ -2,6 +2,7 @@ import { RequestOptions, APIResponse } from "./types/common";
 import { APIError, APIConnectionError, APITimeoutError, APIUserAbortError } from "./core/errors";
 import { Chat } from "./resources/chat/chat";
 import { Completions } from "./resources/completions";
+import { Images } from "./resources/images";
 import { withRetry, extractRequestId } from "./core/utils";
 
 /**
@@ -32,6 +33,8 @@ export class NeuroApi {
   public chat: Chat;
   /** Ресурс для работы с legacy completions */
   public completions: Completions;
+  /** Ресурс для работы с генерацией изображений */
+  public images: Images;
 
   /**
    * Создает новый экземпляр NeuroApi клиента
@@ -45,6 +48,7 @@ export class NeuroApi {
 
     this.chat = new Chat(this);
     this.completions = new Completions(this);
+    this.images = new Images(this);
   }
 
   /**
@@ -102,17 +106,21 @@ export class NeuroApi {
     }, timeout);
 
     try {
-      const headers = {
-        "Content-Type": "application/json",
+      const isFormData = data instanceof FormData;
+      const headers: Record<string, string> = {
         Authorization: `Bearer ${this.apiKey}`,
         ...this.defaultHeaders,
         ...options.headers,
       };
 
+      if (!isFormData) {
+        headers["Content-Type"] = "application/json";
+      }
+
       const response = await fetch(url, {
         method: "POST",
         headers,
-        body: JSON.stringify(data),
+        body: isFormData ? data : JSON.stringify(data),
         signal,
       });
 

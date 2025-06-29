@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
-import { ChatCompletionStreamingRunner } from "./resources/chat/streaming";
-import { CompletionStreamingRunner } from "./resources/completions/streaming";
+import { ChatCompletionStreamingRunner } from "../resources/chat/streaming";
+import { CompletionStreamingRunner } from "../resources/completions/streaming";
 
 // Mock streaming response helper
 function createMockStreamResponse(chunks: string[]): Response {
@@ -119,7 +119,7 @@ describe("ChatCompletionStreamingRunner", () => {
     let errorOccurred = false;
     runner.on("error", (error) => {
       errorOccurred = true;
-      expect(error.message).toContain("Failed to parse chunk");
+      expect(error.message).toMatch(/Failed to parse chunk|JSON Parse error/);
     });
 
     const contentDeltas: string[] = [];

@@ -1,4 +1,5 @@
 import { FinishReason, Usage } from "./common";
+import { SupportedModel } from "./models";
 
 export type ChatCompletionRole = "user" | "assistant" | "system" | "tool";
 
@@ -83,14 +84,14 @@ export interface ChatCompletion {
   id: string;
   object: "chat.completion";
   created: number;
-  model: string;
+  model: SupportedModel;
   choices: ChatCompletionChoice[];
   usage?: Usage;
   system_fingerprint?: string;
 }
 
 export interface ChatCompletionCreateParams {
-  model: string;
+  model: SupportedModel;
   messages: ChatCompletionMessageParam[];
   temperature?: number;
   max_tokens?: number;
@@ -113,7 +114,7 @@ export interface ChatCompletionChunk {
   id: string;
   object: "chat.completion.chunk";
   created: number;
-  model: string;
+  model: SupportedModel;
   choices: ChatCompletionChunkChoice[];
   usage?: Usage;
   system_fingerprint?: string;

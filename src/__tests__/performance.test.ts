@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { ChatCompletionStreamingRunner } from "./resources/chat/streaming";
+import { ChatCompletionStreamingRunner } from "../resources/chat/streaming";
 
 function createLargeStreamResponse(chunkCount: number = 1000): Response {
   const encoder = new TextEncoder();
