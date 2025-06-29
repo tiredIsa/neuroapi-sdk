@@ -13,34 +13,32 @@ TypeScript/JavaScript клиент для OpenAI-совместимых API, р�
 - ✅ **Retry логика** - автоматические повторы с экспоненциальным backoff
 - ✅ **Request ID трекинг** - для debugging и мониторинга
 - ✅ **Function calling** - поддержка инструментов
-- ✅ **Bun оптимизирован** - быстрая разработка и тестирование
 
 ## Установка
 
 ```bash
-npm install neuro-api
+npm install neuroapi
 # или
-yarn add neuro-api
+yarn add neuroapi
 # или
-bun add neuro-api
+bun add neuroapi
 ```
 
 ## Быстрый старт
 
 ```typescript
-import { NeuroApi } from "neuro-api";
+import { NeuroApi } from "neuroapi";
 
 const client = new NeuroApi({
-  baseURL: "https://api.your-service.com",
   apiKey: "your-api-key",
 });
 
 // Chat Completions
 const response = await client.chat.completions.create({
-  model: "gpt-3.5-turbo",
+  model: "gpt-4.1-nano",
   messages: [
-    { role: "system", content: "You are a helpful assistant." },
-    { role: "user", content: "Hello!" },
+    { role: "system", content: "Ты девушка ассистент по имени Юна." },
+    { role: "user", content: "Привет Юна!" },
   ],
 });
 
@@ -53,8 +51,8 @@ console.log(response.choices[0].message.content);
 
 ```typescript
 const response = await client.chat.completions.withResponse({
-  model: "gpt-3.5-turbo",
-  messages: [{ role: "user", content: "Hello!" }],
+  model: "gpt-4.1-nano",
+  messages: [{ role: "user", content: "Привет!" }],
 });
 
 console.log("Request ID:", response.requestId);
@@ -70,7 +68,6 @@ console.log("Data:", response.data.choices[0].message.content);
 ```typescript
 const client = new NeuroApi({
   apiKey: "your-api-key",
-  baseURL: "https://api.your-service.com",
 });
 
 // Retry будет автоматически применен при 429, 500, 502, 503, 504 ошибках
@@ -113,8 +110,8 @@ const tools = [
 ];
 
 const response = await client.chat.completions.create({
-  model: "gpt-3.5-turbo",
-  messages: [{ role: "user", content: "What's the weather in Moscow?" }],
+  model: "gpt-4.1-nano",
+  messages: [{ role: "user", content: "Какая погода в москве?" }],
   tools,
   tool_choice: "auto",
 });
@@ -129,7 +126,7 @@ if (response.choices[0].message.tool_calls) {
     const followUp = await client.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
-        { role: "user", content: "What's the weather in Moscow?" },
+        { role: "user", content: "Какая погода в москве?" },
         response.choices[0].message,
         {
           role: "tool",
@@ -147,8 +144,8 @@ if (response.choices[0].message.tool_calls) {
 ```typescript
 // Создание streaming запроса
 const stream = await client.chat.completions.stream({
-  model: "gpt-3.5-turbo",
-  messages: [{ role: "user", content: "Tell me a story." }],
+  model: "gpt-4.1-nano",
+  messages: [{ role: "user", content: "Перескажи сюжет фильма 'Матрица'." }],
 });
 
 // Обработка событий
@@ -227,7 +224,7 @@ await client.chat.completions.stream(params);
 ```typescript
 // Поддержка legacy API
 await client.completions.create({
-  model: "gpt-3.5-turbo",
+  model: "gpt-4.1-nano",
   prompt: "Complete this text...",
 });
 
