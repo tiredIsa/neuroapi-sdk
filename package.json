@@ -1,0 +1,32 @@
+{
+  "name": "NeuroAPI",
+  "version": "1.0.0",
+  "description": "OpenAI compatible API client for neuroapi.host",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target node --format cjs && tsc --emitDeclarationOnly",
+    "dev": "bun --watch src/index.ts",
+    "prepublishOnly": "bun run build",
+    "test": "bun test"
+  },
+  "keywords": [
+    "openai",
+    "api",
+    "client",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "bun-types": "latest",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
